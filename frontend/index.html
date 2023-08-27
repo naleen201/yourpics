@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link rel="stylesheet" href="/src/Style.css" />
+        <title>yourpics</title>
+        <script>
+            //function to close the photo view
+            function closePhotoView() {
+                var closePhotoViewButton = document.getElementById("closePhotoViewButton");
+                var photoViewContainer = document.getElementById("photoViewContainer");
+                var overlay = document.getElementById("overlay");
+                closePhotoViewButton.style.display = "none";
+                photoViewContainer.style.display = "none";
+                overlay.style.display = "none";
+            }
+            //ShowImage Function to show the Photo in a popup on click
+            function ShowImage(image) {
+                var closePhotoViewButton = document.getElementById("closePhotoViewButton");
+                var photoViewContainer = document.getElementById("photoViewContainer");
+                var overlay = document.getElementById("overlay");
+                photoViewContainer.style.display = "none";
+                overlay.style.display = "none";
+                closePhotoViewButton.style.display = "none";
+                var imageSource = image["src"];
+                var photoViewImage = document.getElementById("photoViewImage");
+                photoViewImage.src = imageSource;
+
+                if (photoViewContainer.style.display === "none" && overlay.style.display === "none" && closePhotoViewButton.style.display === "none") {
+                    overlay.style.display = "block";
+                    photoViewContainer.style.display = "block";
+                    closePhotoViewButton.style.display = "block";
+                } else {
+                    photoViewContainer.style.display = "none";
+                    overlay.style.display = "none";
+                    closePhotoViewButton.style.display = "none";
+                }
+            }
+        </script>
+    </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
