@@ -1,5 +1,4 @@
 import React from 'react'
-import styles from '../style/HomePageBanner.css?inline'
 function HomePageBanner() {
   return (
     <div id="bannerContainer">
