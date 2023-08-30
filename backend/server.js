@@ -6,7 +6,7 @@ const cors = require("cors");
 const mongoose = require('mongoose');
 
 try{
-    const client = mongoose.connect('mongodb://127.0.0.1:27017/yourpics').then((conn) => {
+    const client = mongoose.connect(process.env.MONGO_URI).then((conn) => {
         console.log(`MongoDB Connected: ${conn.connection.host}`);
     })
     .catch((error) => {
