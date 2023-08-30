@@ -1,15 +1,13 @@
 import './App.css'
-import NavBar from './components/NavBar'
-import HomePageBanner from './components/HomePageBanner'
-import HomePageFeed from './components/HomePageFeed'
+import NavBar from '../src/boilerplate/NavBar'
+import { Outlet } from 'react-router-dom'
 
 function App() {
 
   return (
     <>
-        <NavBar />
-        <HomePageBanner />
-        <HomePageFeed />
+      <NavBar />
+      <Outlet />
     </>
   )
 }

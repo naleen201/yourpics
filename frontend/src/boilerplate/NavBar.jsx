@@ -1,4 +1,6 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
+ 
 function NavBar() {
   return (
         <nav>
@@ -10,8 +12,8 @@ function NavBar() {
                 </svg>
             </div>
             <div id="navMenu">
-                <div><a href="HomePage.html">Home</a></div>
-                <div><a href="SignUpPage.html">SignUp</a></div>
+                <div><Link to={`/`}>Home</Link></div>
+                <div><Link to={`/login`}>LogIn</Link></div>
                 <div>About</div>
             </div>
         </nav>

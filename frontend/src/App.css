@@ -72,7 +72,7 @@ nav {
 #bannerContainer {
     position: relative;
     width: 100%;
-    margin-top: 30px;
+    margin-top: 20px;
     height: 400px;
     background-image: url(../images/img4.JPG);
     background-position: top;
@@ -83,8 +83,8 @@ nav {
     width: 100%;
 }
 #bannerText {
-    padding-top: 10%;
-    padding-left: 10%;
+    padding-top: 5rem;
+    padding-left: 5rem;
 }
 #bannerTextHeading {
     margin: 0;
