@@ -1,8 +1,55 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
- 
-function NavBar() {
-  return (
+import React from "react";
+import {Link} from "react-router-dom";
+import axios from "axios";
+function NavBar({user}) {
+    const LogOut = () => {
+        if (user) {
+            axios
+                .post(
+                    import.meta.env.VITE_API_URL + "/auth/logout",
+                    {},
+                    {
+                        withCredentials: true,
+                    }
+                )
+                .then((response) => {
+                    localStorage.removeItem("user");
+                    window.location.href = "/";
+                });
+        }
+    };
+    const IsLoggedIn = () => {
+        if (user) {
+            return (
+                <>
+                    <div>Welcome, {user.username}!</div>
+                    <div>
+                        <Link to={`/`}>Home</Link>
+                    </div>
+                    <div>
+                        <Link to={"/profile"}>Profile</Link>
+                    </div>
+                    <div onClick={LogOut}>
+                        <Link>LogOut</Link>
+                    </div>
+                </>
+            );
+        }
+        return (
+            <>
+                <div>
+                    <Link to={`/`}>Home</Link>
+                </div>
+                <div>
+                    <Link to={`/login`}>LogIn</Link>
+                </div>
+                <div>
+                    <Link to={`/signup`}>SignUp</Link>
+                </div>
+            </>
+        );
+    };
+    return (
         <nav>
             <div id="logo">yourpics</div>
             <div id="searchContainer">
@@ -12,12 +59,10 @@ function NavBar() {
                 </svg>
             </div>
             <div id="navMenu">
-                <div><Link to={`/`}>Home</Link></div>
-                <div><Link to={`/login`}>LogIn</Link></div>
-                <div><Link to={`/signup`}>SignUp</Link></div>
+                <IsLoggedIn />
             </div>
         </nav>
-  )
+    );
 }
 
-export default NavBar
+export default NavBar;
