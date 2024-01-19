@@ -16,7 +16,7 @@ const getImageById = (req, res) => {
 //@route  =     POST /api/images
 //@access =     Private
 const postImage = (req, res) => {
-    if (!req.body.image) {
+    if (!req.file) {
         res.status(400);
         throw new Error("Please add an image to upload.");
     }

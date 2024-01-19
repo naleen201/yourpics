@@ -1,21 +1,20 @@
 import axios from "axios";
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
+
+import { UserDetailsContext } from "../contexts/UserDetailsContext";
+
+import UserInfo from "../components/ProfilePage/UserInfo"
+import HomePageFeed from "../components/HomePage/HomePageFeed";
+
 function Profile() {
-    const [user, setUser] = useState(null);
-    useEffect(() => {
-        axios
-            .get(import.meta.env.VITE_API_URL + "/gen/profile", {
-                withCredentials: true,
-            })
-            .then((response) => {
-                console.log(response);
-                setUser(response.data);
-            })
-            .catch((error) => console.error(error));
-    }, []);
+    const user = useContext(UserDetailsContext);  
+    if(!user){
+        window.location.href='/login';
+    }
     return (
         <>
-            <div>{user ? JSON.stringify(user) : "Loading..."}</div>
+            <UserInfo />
+            <HomePageFeed />
         </>
     );
 }

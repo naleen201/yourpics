@@ -222,3 +222,56 @@ nav {
   }
 }
 /*SignUp Error Message CSS End*/
+/* ProfilePage CSS Start */
+#userDetailsContainer {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+}
+#userDetails {
+    height: 400px;
+    width: 50%;
+    box-shadow: 1px -8px 20px -9px rgb(199, 199, 199), -1px -8px 20px -9px grey;
+    border-radius: 20px 20px 20px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+#profilePicture {
+    border-radius: 50% 50% 50% 50%;
+    width: 150px;
+    height: 150px;
+    margin: 20px;
+    overflow: hidden;
+}
+#profilePicture img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+#userID {
+    color: gray;
+    font-size: 13px;
+    margin-bottom: 20px;
+}
+#userID:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+#userName {
+    margin: 0px;
+}
+#userStats {
+    width: 80%;
+    display: flex;
+    justify-content: space-evenly;
+}
+#userStats div {
+    width: 20%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+/* ProfilePage CSS End */

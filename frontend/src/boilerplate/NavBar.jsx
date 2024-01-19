@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
 import {Link} from "react-router-dom";
 import axios from "axios";
-function NavBar({user}) {
+import { UserDetailsContext } from "../contexts/UserDetailsContext";
+function NavBar() {
+    const user = useContext(UserDetailsContext);
     const LogOut = () => {
         if (user) {
             axios

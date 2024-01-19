@@ -3,20 +3,24 @@ import NavBar from "../src/boilerplate/NavBar";
 import {Outlet} from "react-router-dom";
 import {useState, useEffect} from "react";
 import axios from "axios";
+import { UserDetailsContext } from "./contexts/UserDetailsContext";
 function App() {
     const [user, setUser] = useState();
     useEffect(() => {
-        const loggedInUser = localStorage.getItem("user");
-        if (loggedInUser) {
-            const foundUser = JSON.parse(loggedInUser);
-            setUser(foundUser);
-        }
+        axios
+            .get(import.meta.env.VITE_API_URL + "/gen/profile", {
+                withCredentials: true,
+            })
+            .then((response) => {
+                setUser(response.data);
+            })
+            .catch((error) => console.error(error));
     }, []);
     return (
-        <>
-            <NavBar user={user} />
+        <UserDetailsContext.Provider value={user}>
+            <NavBar />
             <Outlet />
-        </>
+        </UserDetailsContext.Provider>
     );
 }
 
