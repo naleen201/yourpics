@@ -3,6 +3,16 @@ import ReactDOM from "react-dom/client";
 
 import {createBrowserRouter, RouterProvider} from "react-router-dom";
 
+// Import Redux provider:
+import { Provider } from 'react-redux'
+// Import redux store:
+import { store } from './store'
+
+//For store persist
+import { persistor } from './store/index.js'
+import { PersistGate } from 'redux-persist/integration/react'
+
+
 import App from "./App.jsx";
 
 import HomePage from "./pages/HomePage.jsx";
@@ -29,7 +39,7 @@ const router = createBrowserRouter([
                 element: <SignUpPage />,
             },
             {
-                path: "/profile",
+                path: "/profile/:userId",
                 element: <Profile />,
             },
         ],
@@ -38,6 +48,10 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")).render(
     <React.StrictMode>
-        <RouterProvider router={router} />
+        <Provider store={store}>
+            <PersistGate loading={null} persistor={persistor}>
+                <RouterProvider router={router} />
+            </PersistGate>
+        </Provider>
     </React.StrictMode>
 );

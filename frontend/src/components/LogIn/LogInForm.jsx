@@ -1,14 +1,15 @@
 import React, {useState} from "react";
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
+import { useDispatch, useSelector } from 'react-redux'
 import dotenv from "dotenv";
+import { ADD_USER } from "../../store/userStore";
 
 function LogInPage() {
-    const navigateTo = useNavigate();
+    const dispatch = useDispatch()
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [user, setUser] = useState();
     const [error, setError] = useState(null);
 
     const handleSubmit = (e) => {
@@ -27,7 +28,7 @@ function LogInPage() {
             return;
         }
         //Creating user object to send to server
-        const user = {
+        let user = {
             username: username,
             password: password,
         };
@@ -37,9 +38,13 @@ function LogInPage() {
                 withCredentials: true,
             })
             .then((response) => {
-                console.log(response.data.user);
-                setUser(response.data.user);
-                localStorage.setItem("user", JSON.stringify(response.data.user));
+                let user = {
+                    id: response.data.user.id,
+                    username: response.data.user.username,
+                    isAuthenticated: true
+                }
+                //localStorage.setItem("user", JSON.stringify(response.data.user));
+                dispatch(ADD_USER(user));
                 window.location.href = "/";
             })
             .catch((error) => {

@@ -7,7 +7,7 @@ var s3 = new aws.S3({
    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
    Bucket: "yourpicsimages"
 })
-var uploadImage = multer({
+var uploadProfilePicture = multer({
    storage: multerS3({
        s3: s3,
        bucket:"yourpicsimages",
@@ -16,9 +16,21 @@ var uploadImage = multer({
            cb(null, { fieldName: file.fieldname });
        },
        key: function (req, file, cb) {
-           cb(null, Date.now().toString())
+           cb(null, 'ProfilePictures/' + Date.now().toString() + '-' + file.originalname);
        }
    })
 })
-
-module.exports = {uploadImage};
+var uploadImage = multer({
+    storage: multerS3({
+        s3: s3,
+        bucket:"yourpicsimages",
+        contentType: multerS3.AUTO_CONTENT_TYPE,
+        metadata: function (req, file, cb) {
+            cb(null, { fieldName: file.fieldname });
+        },
+        key: function (req, file, cb) {
+            cb(null, 'UploadedImages/' + Date.now().toString() + '-' + file.originalname);
+        }
+    })
+ })
+module.exports = {uploadProfilePicture, uploadImage};

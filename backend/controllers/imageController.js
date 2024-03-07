@@ -1,8 +1,25 @@
+const mongoose = require("mongoose");
+
+const UserLoginDetailsSchema = require("../Schemas/UserSchema");
+const UserLoginDetails = mongoose.model("userLoginDetails", UserLoginDetailsSchema);
+
+const ImagesByUsersSchema = require("../Schemas/ImageSchema");
+const ImagesByUsers = mongoose.model("imagesByUsers", ImagesByUsersSchema);
+
+const ImageDetailsSchema = require("../Schemas/ImageDetailsSchema");
+const ImageDetails = mongoose.model("imageDetails", ImageDetailsSchema);
+
 //@desc   =     get all images
 //@route  =     GET /api/images
 //@access =     Private
-const getImages = (req, res) => {
-    res.status(200).json({message: "All Images"});
+const getImages = async (req, res) => {
+    try {
+        const images = await ImagesByUsers.find({ imageType: "image" }).sort({ _id: -1 }).limit(10).populate("userId");
+        
+        res.status(200).json(images);
+    } catch (error) {
+        res.status(500).json({ error: "Failed to get images" });
+    }
 };
 
 //@desc   =     get image with id
@@ -20,7 +37,36 @@ const postImage = (req, res) => {
         res.status(400);
         throw new Error("Please add an image to upload.");
     }
-    res.status(200).json({message: "Images added!"});
+    if(req.file){
+        const {userId, tags} = req.body;
+        const img = req.file;
+        const imageTags = tags.split(",");
+        const image = new ImagesByUsers({
+            userId: userId,
+            imageId: img.key,
+            imageType: "image",
+            imageURL: img.location,
+        });
+        image.save().then((result) => {
+            const imageDetails = new ImageDetails({
+                userId: userId,
+                imageId: result._id,
+                imageType: "image",
+                imageURL: img.location,
+                imageTag: imageTags,
+            });
+            imageDetails.save().then((result) => {
+            }).catch((err) => {
+                console.log(err);
+            });
+            res.status(201).json({message: "Image added!"});
+        }).catch((err) => { 
+            console.log(err);
+        });
+    } else {
+        res.status(400);
+        throw new Error("Error saving image.");
+    }
 };
 
 //@desc   =     update(PUT) image with id
@@ -47,8 +93,14 @@ const getImageByTagAndCount = (req, res) => {
 //@desc   =     Get images by a user
 //@route  =     GET /api/images/:userId
 //@access =     Private
-const getImagesByUser = (req, res) => {
-    res.status(200).json({message: `Images with User ID : ${req.params.userId}`});
+const getImagesByUser = async (req, res) => {
+    const userId = req.params.userId;
+    try {
+        const images = await ImagesByUsers.find({ userId: userId }).sort({ _id: -1 });
+        res.status(200).json(images);
+    } catch (error) {
+        res.status(500).json({ error: "Failed to get images" });
+    }
 };
 module.exports = {
     getImages,

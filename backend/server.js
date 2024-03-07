@@ -12,12 +12,14 @@ const mongoose = require("mongoose");
 
 try {
     const client = mongoose
-        .connect(process.env.MONGO_URI)
+        .connect(process.env.MONGO_URI, {
+            dbName: 'yourpics',
+        })
         .then((conn) => {
             console.log(`MongoDB Connected: ${conn.connection.host}`);
         })
         .catch((error) => {
-            console.log(`Error: ${error.message}`.red.bold);
+            console.log(`Error: ${error.message}`);
             process.exit();
         });
 } catch (err) {

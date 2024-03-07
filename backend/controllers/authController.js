@@ -2,9 +2,14 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
-const UserSchema = require("../Schemas/UserSchema");
 
-const User = mongoose.model("User", UserSchema);
+const UserLoginDetailsSchema = require("../Schemas/UserSchema");
+const UserLoginDetails = mongoose.model("userLoginDetails", UserLoginDetailsSchema);
+
+const ImagesByUsersSchema = require("../Schemas/ImageSchema");
+const ImagesByUsers = mongoose.model("imagesByUsers", ImagesByUsersSchema);
+
+
 
 //@desc   =     log in user
 //@route  =     POST /api/login
@@ -13,7 +18,7 @@ const loginUser = async (req, res) => {
     try {
         //validating login details
         const {username, password} = req.body;
-        const user = await User.findOne({username});
+        const user = await UserLoginDetails.findOne({username});
         if (!user) {
             return res.status(400).json({error: "Incorrect password or username"});
         }
@@ -56,52 +61,60 @@ const logoutUser = (req, res) => {
 //@access =     Public
 const signupUser = async (req, res) => {
     try {
-        console.log(req.cookies.token);
-        const {username, email, password} = req.body;
-
-        // Check if username, email, and password are provided
-        if (!username || !email || !password) {
-            return res.status(400).json({error: "Username, email, and password are required"});
-        }
-
-        // Check if username is valid (e.g., alphanumeric with minimum length of 3 characters)
-        if (!/^[a-zA-Z0-9]{3,16}$/.test(username)) {
-            return res.status(400).json({error: "Invalid username"});
-        }
-
-        // Check if email is valid
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-            return res.status(400).json({error: "Invalid email address"});
-        }
-
-        // Check if password meets the requirements (e.g., minimum length of 6 characters)
-        if (password.length < 6) {
-            return res.status(400).json({error: "Password should have at least 6 characters"});
-        }
-
-        await User.findOne({email: email}).then((existingEmail) => {
-            if (existingEmail) {
-                return res.status(400).json({error: "User with the provided email already exists!"});
+            const {username, email, password} = req.body;
+            const profilePicture = req.file;
+            // Check if username, email, and password are provided
+            if (!username || !email || !password) {
+                return res.status(400).json({error: "Username, email, and password are required"});
             }
-            User.findOne({username: username}).then((existingUsername) => {
-                if (existingUsername) {
-                    return res.status(400).json({error: "Username is taken!"});
+        
+            // Check if username is valid (e.g., alphanumeric with minimum length of 3 characters)
+            if (!/^[a-zA-Z0-9]{3,16}$/.test(username)) {
+                return res.status(400).json({error: "Invalid username"});
+            }
+        
+            // Check if email is valid
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                return res.status(400).json({error: "Invalid email address"});
+            }
+        
+            // Check if password meets the requirements (e.g., minimum length of 6 characters)
+            if (password.length < 6) {
+                return res.status(400).json({error: "Password should have at least 6 characters"});
+            }
+        
+            await UserLoginDetails.findOne({email: email}).then((existingEmail) => {
+                if (existingEmail) {
+                    return res.status(400).json({error: "User with the provided email already exists!"});
                 }
-                const user = new User({
-                    username: username,
-                    email: email,
-                    password: bcrypt.hashSync(password, bcrypt.genSaltSync(10)),
-                });
-
-                user.save()
-                    .then((user) => {
-                        res.status(200).json({message: "User created successfully", user: user});
-                    })
-                    .catch((err) => {
-                        res.status(400).json({error: err.message});
+                UserLoginDetails.findOne({username: username}).then((existingUsername) => {
+                    if (existingUsername) {
+                        return res.status(400).json({error: "Username is taken!"});
+                    }
+                    const user = new UserLoginDetails({
+                        username: username,
+                        email: email,
+                        password: bcrypt.hashSync(password, bcrypt.genSaltSync(10)),
                     });
+                    user.save()
+                        .then((user) => {
+                            if(profilePicture){
+                                const img = profilePicture;
+                                const imageDetails = new ImagesByUsers({
+                                    userId: user._id,
+                                    imageId: img.key,
+                                    imageType: "PFP",
+                                    imageURL: img.location,
+                                });
+                                imageDetails.save();
+                            }
+                            res.status(200).json({message: "User created successfully", user: user});
+                        })
+                        .catch((err) => {
+                            res.status(400).json({error: err.message});
+                        });
+                });
             });
-        });
     } catch (err) {
         console.error(err);
         res.status(500).json({error: "Internal server error"});

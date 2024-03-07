@@ -2,6 +2,18 @@ body {
     font-family: "Poppins";
     margin: 0;
 }
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+html, body {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
 textarea:focus,
 input:focus {
     outline: none;
@@ -38,11 +50,13 @@ nav {
     align-items: center;
 }
 #navMenu > div {
+    white-space: nowrap;
     margin: 0px 2px 0px 2px;
     color: black;
     border: 1px solid black;
     padding: 5px 8px;
     font-weight: 400;
+    width: auto;
 }
 #logo {
     font-size: xx-large;
@@ -111,12 +125,32 @@ nav {
     width: 30%;
 }
 #imageContainer {
+    position: relative;
     margin-bottom: 5px;
     width: 100%;
 }
 .image {
+    display:block;
+    height: auto;
     width: 100%;
 }
+#imageOverlay {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    padding: 10px; /* Add padding to the covering div */
+    background: rgba(0, 0, 0, 0.5); /* Semi-transparent black overlay */
+    opacity: 0; /* Hide the overlay initially */
+    transition: .2s ease;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    box-sizing: border-box; /* Include padding in the height calculation */
+}
+#imageContainer:hover #imageOverlay {
+    opacity: 1;
+  }
 /*Home Page Feed CSS End*/
 /*Photo View CSS Start*/
 #photoViewContainer {
@@ -229,8 +263,8 @@ nav {
     justify-content: center;
 }
 #userDetails {
-    height: 400px;
     width: 50%;
+    padding: 10px;
     box-shadow: 1px -8px 20px -9px rgb(199, 199, 199), -1px -8px 20px -9px grey;
     border-radius: 20px 20px 20px 20px;
     display: flex;

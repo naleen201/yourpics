@@ -1,11 +1,18 @@
-import React, { useContext } from "react";
+import React, { useEffect } from "react";
 import {Link} from "react-router-dom";
 import axios from "axios";
-import { UserDetailsContext } from "../contexts/UserDetailsContext";
+
+import { useDispatch, useSelector } from 'react-redux'
+import { RESET_USER } from "../store/userStore";
+
+//import { UserDetailsContext } from "../contexts/UserDetailsContext";
+
 function NavBar() {
-    const user = useContext(UserDetailsContext);
+    //const user = useContext(UserDetailsContext);
+    const dispatch = useDispatch()
+    let user = useSelector((state) => state.user);
     const LogOut = () => {
-        if (user) {
+        if (user.isAuthenticated) {
             axios
                 .post(
                     import.meta.env.VITE_API_URL + "/auth/logout",
@@ -15,13 +22,14 @@ function NavBar() {
                     }
                 )
                 .then((response) => {
-                    localStorage.removeItem("user");
+                    dispatch(RESET_USER());
                     window.location.href = "/";
                 });
         }
     };
+
     const IsLoggedIn = () => {
-        if (user) {
+        if (user.isAuthenticated) {
             return (
                 <>
                     <div>Welcome, {user.username}!</div>
@@ -29,7 +37,7 @@ function NavBar() {
                         <Link to={`/`}>Home</Link>
                     </div>
                     <div>
-                        <Link to={"/profile"}>Profile</Link>
+                        <Link to={`/profile/${user.id}`}>Profile</Link>
                     </div>
                     <div onClick={LogOut}>
                         <Link>LogOut</Link>

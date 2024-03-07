@@ -1,12 +1,31 @@
 const mongoose = require("mongoose");
 
-const UserSchema = require("../Schemas/UserSchema");
+const UserLoginDetailsSchema = require("../Schemas/UserSchema");
+const UserLoginDetails = mongoose.model("userLoginDetails", UserLoginDetailsSchema);
 
-const User = mongoose.model("User", UserSchema);
+const ImagesByUsersSchema = require("../Schemas/ImageSchema");
+const ImagesByUsers = mongoose.model("imagesByUsers", ImagesByUsersSchema);
 
 const getDetails = async (req, res) => {
     try {
-        const user = await User.findOne({username: req.user.username});
+        const userData = await UserLoginDetails.findOne({_id: req.params.userId});
+        const imageData = await ImagesByUsers.findOne({userId: userData._id});
+        let user = {};
+        if(!imageData) {
+            user = {
+                _id: userData._id,
+                username: userData.username,
+                email: userData.email,
+                imageURL: "",
+            };
+        } else {
+            user = {
+                _id: userData._id,
+                username: userData.username,
+                email: userData.email,
+                imageURL: imageData.imageURL,
+            };
+        }
         res.status(200).json(user);
     } catch (err) {
         console.log(err);

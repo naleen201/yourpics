@@ -1,9 +1,12 @@
 const mongoose = require('mongoose');
 
-const UserSchema = new mongoose.Schema({
+const UserLoginDetailsSchema = new mongoose.Schema({
   username: String,
   email: String,
   password: String
+},{
+    collection: 'userLoginDetails',
+    timestamps: true
 });
 
-module.exports = UserSchema;
+module.exports = UserLoginDetailsSchema;

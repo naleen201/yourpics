@@ -1,11 +1,11 @@
 const express = require("express");
 const router = express.Router();
 const {getImages, getImageById, postImage, updateImage, deleteImage, getImageByTagAndCount, getImagesByUser} = require("../controllers/imageController");
+const authenticateToken = require("../middleware/authecticateToken");
+const {uploadImage} = require("../middleware/imagesMiddleware/imageUpload");
 
-const {uploadImage} = require("../middleware/imagesMiddleware/imageUpload")
-
-router.route("/").get(getImages).post(uploadImage.single("image"), postImage);
-router.route("/:id").get(getImageById).put(updateImage).delete(deleteImage);
+router.route("/").get(getImages).post(authenticateToken,uploadImage.single("userImage"), postImage);
+router.route("/:id").get(getImageById).put(authenticateToken,updateImage).delete(authenticateToken,deleteImage);
 router.route("/users/:userId").get(getImagesByUser);
 router.route("/:tag/:count").get(getImageByTagAndCount);
 //#region Routes Info

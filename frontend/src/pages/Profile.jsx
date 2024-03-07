@@ -1,19 +1,20 @@
-import axios from "axios";
-import React, {useContext, useEffect, useState} from "react";
+import React from "react";
 
-import { UserDetailsContext } from "../contexts/UserDetailsContext";
 
 import UserInfo from "../components/ProfilePage/UserInfo"
 import HomePageFeed from "../components/HomePage/HomePageFeed";
+import { useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 
 function Profile() {
-    const user = useContext(UserDetailsContext);  
+    let user = useSelector((state) => state.user);
     if(!user){
         window.location.href='/login';
     }
+    let userId = useParams();
     return (
         <>
-            <UserInfo />
+            <UserInfo userId={userId}/>
             <HomePageFeed />
         </>
     );
