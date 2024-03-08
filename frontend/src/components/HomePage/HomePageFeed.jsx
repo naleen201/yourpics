@@ -60,7 +60,6 @@ function HomePageFeed() {
                         <div id="imageContainer">
                             <img key={image._id} src={image.imageURL} alt="" className="image" onclick="ShowImage(this)" />
                             <div id="imageOverlay">
-                                {console.log(image)}
                                 <a href={`/profile/${image.userId}`} id="imageDetails">{image.userId.username}</a>
                             </div>
                         </div>

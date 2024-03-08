@@ -2,7 +2,6 @@ import React, {useState} from "react";
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
 import dotenv from "dotenv";
-import nodemailer from "nodemailer";
 
 function SignUpPage() {
     const navigateTo = useNavigate();
